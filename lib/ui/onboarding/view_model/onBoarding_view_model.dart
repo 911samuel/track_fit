@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod/riverpod.dart';
+import 'package:track_fit/ui/auth/view/auth_screen.dart';
 import "../../../core/theme/app_colors.dart";
 
 class OnboardingState {
@@ -131,9 +132,11 @@ class OnboardingViewModel extends StateNotifier<OnboardingState> {
     );
   }
 
-  void navigateToAuth() {
-    // TODO: Navigate to auth screen
-    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AuthScreen()));
+  void navigateToAuth(BuildContext context) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => AuthScreen()),
+    );
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:track_fit/ui/auth/view/auth_screen.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/theme/app_dimensions.dart';
@@ -307,10 +308,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
             width: double.infinity,
             height: AppDimensions.buttonHeightLarge,
             child: ElevatedButton(
-              onPressed:
-                  state.isLastPage
-                      ? viewModel.navigateToAuth
-                      : viewModel.nextPage,
+              onPressed: () {
+                if (state.isLastPage) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => AuthScreen()),
+                  );
+                } else {
+                  viewModel.nextPage();
+                }
+              },
               child: Text(
                 state.isLastPage ? "Get Started" : "Continue",
                 style: AppTextStyles.buttonLarge,

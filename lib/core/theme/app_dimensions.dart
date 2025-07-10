@@ -50,8 +50,8 @@ class AppDimensions {
   static const double cardPadding = 16.0;
 
   // Onboarding Specific
-  static const double onboardingIconSize = 120.0;
-  static const double onboardingIconRadius = 30.0;
+  static const double onboardingIconSize = 80.0;
+  static const double onboardingIconRadius = 16.0;
   static const double progressIndicatorHeight = 4.0;
   static const double dotIndicatorSize = 8.0;
   static const double dotIndicatorActiveWidth = 24.0;

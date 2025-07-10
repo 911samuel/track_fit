@@ -101,7 +101,12 @@ class AppTextStyles {
     color: AppColors.textLightGray,
     height: 1.5,
   );
-
+  static const TextStyle notificationFeature = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: AppColors.darkBackground,
+    height: 1.4,
+  );
   static const TextStyle onboardingFeature = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.normal,
