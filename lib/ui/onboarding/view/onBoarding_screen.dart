@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:track_fit/ui/auth/view/auth_screen.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_text_styles.dart';
-import '../../../core/theme/app_dimensions.dart';
+import 'package:track_fit/core/theme/app_colors.dart';
+import 'package:track_fit/ui/onboarding/widget/onBoarding_bottom_section.dart';
+import 'package:track_fit/ui/onboarding/widget/onboarding_progress_indicator.dart';
+import 'package:track_fit/ui/onboarding/widget/onboarding_slides.dart';
+import 'package:track_fit/ui/onboarding/widget/onboarding_top_bar.dart';
 import '../view_model/onboarding_view_model.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
@@ -63,268 +64,26 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       body: SafeArea(
         child: Column(
           children: [
-            _buildTopBar(state, viewModel),
-            _buildProgressIndicator(state),
+            OnboardingTopBar(state: state, viewModel: viewModel),
+            OnboardingProgressIndicator(state: state),
             Expanded(
               child: PageView.builder(
                 controller: state.pageController,
                 onPageChanged: viewModel.onPageChanged,
                 itemCount: OnboardingViewModel.slides.length,
                 itemBuilder: (context, index) {
-                  return _buildSlide(
-                    OnboardingViewModel.slides[index],
-                    index,
-                    state,
+                  return OnboardingSlides(
+                    slide: OnboardingViewModel.slides[index],
+                    index: index,
+                    fadeAnimation: _fadeAnimation,
+                    slideAnimation: _slideAnimation,
                   );
                 },
               ),
             ),
-            _buildBottomSection(state, viewModel),
+            OnboardingBottomSection(state: state, viewModel: viewModel),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildTopBar(OnboardingState state, OnboardingViewModel viewModel) {
-    return Padding(
-      padding: const EdgeInsets.all(AppDimensions.paddingL),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          if (state.currentPage > 0)
-            GestureDetector(
-              onTap: viewModel.previousPage,
-              child: Container(
-                padding: const EdgeInsets.all(AppDimensions.paddingS),
-                decoration: BoxDecoration(
-                  color: AppColors.cardGray,
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-                ),
-                child: const Icon(
-                  Icons.arrow_back_ios,
-                  color: AppColors.textWhite,
-                  size: AppDimensions.iconS,
-                ),
-              ),
-            )
-          else
-            const SizedBox(width: 40),
-          Text("Fitness Tracker", style: AppTextStyles.brand),
-          if (!state.isLastPage)
-            GestureDetector(
-              onTap: viewModel.skipToEnd,
-              child: Text("Skip", style: AppTextStyles.navigation),
-            )
-          else
-            const SizedBox(width: 40),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProgressIndicator(OnboardingState state) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingL),
-      child: Row(
-        children: List.generate(
-          OnboardingViewModel.slides.length,
-          (index) => Expanded(
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: AppDimensions.animationNormal),
-              height: AppDimensions.progressIndicatorHeight,
-              margin: const EdgeInsets.symmetric(
-                horizontal: AppDimensions.marginXS / 2,
-              ),
-              decoration: BoxDecoration(
-                color:
-                    index <= state.currentPage
-                        ? AppColors.primaryNeon
-                        : AppColors.cardGray,
-                borderRadius: BorderRadius.circular(AppDimensions.radiusXS / 2),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSlide(OnboardingSlide slide, int index, OnboardingState state) {
-    return AnimatedBuilder(
-      animation: _fadeAnimation,
-      builder: (context, child) {
-        return SlideTransition(
-          position: _slideAnimation,
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: Padding(
-              padding: const EdgeInsets.all(AppDimensions.paddingL),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildIcon(slide),
-                  const SizedBox(
-                    height: AppDimensions.spaceXXL + AppDimensions.spaceS,
-                  ),
-                  _buildTitle(slide),
-                  const SizedBox(height: AppDimensions.spaceL),
-                  _buildDescription(slide),
-                  const SizedBox(
-                    height: AppDimensions.spaceXXL + AppDimensions.spaceS,
-                  ),
-                  _buildFeatures(slide),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildIcon(OnboardingSlide slide) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.0, end: 1.0),
-      duration: Duration(milliseconds: AppDimensions.animationVerySlow),
-      builder: (context, value, child) {
-        return Transform.scale(
-          scale: value,
-          child: Container(
-            width: AppDimensions.onboardingIconSize,
-            height: AppDimensions.onboardingIconSize,
-            decoration: BoxDecoration(
-              color: AppColors.cardGray,
-              borderRadius: BorderRadius.circular(
-                AppDimensions.onboardingIconRadius,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: slide.iconColor.withValues(alpha: 0.3),
-                  blurRadius: 20,
-                  spreadRadius: 5,
-                ),
-              ],
-            ),
-            child: Icon(
-              slide.icon,
-              size: AppDimensions.iconXXL - AppDimensions.iconXS,
-              color: slide.iconColor,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildTitle(OnboardingSlide slide) {
-    return Column(
-      children: [
-        Text(
-          slide.title,
-          style: AppTextStyles.onboardingTitle,
-          textAlign: TextAlign.center,
-        ),
-        Text(
-          slide.subtitle,
-          style: AppTextStyles.onboardingTitleBold,
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDescription(OnboardingSlide slide) {
-    return Text(
-      slide.description,
-      style: AppTextStyles.onboardingDescription,
-      textAlign: TextAlign.center,
-    );
-  }
-
-  Widget _buildFeatures(OnboardingSlide slide) {
-    return Column(
-      children:
-          slide.features.map((feature) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: AppDimensions.paddingS,
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: AppDimensions.dotIndicatorSize,
-                    height: AppDimensions.dotIndicatorSize,
-                    decoration: BoxDecoration(
-                      color: AppColors.accentGreen,
-                      borderRadius: BorderRadius.circular(
-                        AppDimensions.radiusXS,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppDimensions.spaceM),
-                  Text(feature, style: AppTextStyles.onboardingFeature),
-                ],
-              ),
-            );
-          }).toList(),
-    );
-  }
-
-  Widget _buildBottomSection(
-    OnboardingState state,
-    OnboardingViewModel viewModel,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.all(AppDimensions.paddingL),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              OnboardingViewModel.slides.length,
-              (index) => AnimatedContainer(
-                duration: Duration(milliseconds: AppDimensions.animationNormal),
-                width:
-                    index == state.currentPage
-                        ? AppDimensions.dotIndicatorActiveWidth
-                        : AppDimensions.dotIndicatorSize,
-                height: AppDimensions.dotIndicatorSize,
-                margin: const EdgeInsets.symmetric(
-                  horizontal: AppDimensions.marginXS,
-                ),
-                decoration: BoxDecoration(
-                  color:
-                      index == state.currentPage
-                          ? AppColors.primaryNeon
-                          : AppColors.cardGray,
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusXS),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: AppDimensions.spaceXL - AppDimensions.spaceXS),
-          SizedBox(
-            width: double.infinity,
-            height: AppDimensions.buttonHeightLarge,
-            child: ElevatedButton(
-              onPressed: () {
-                if (state.isLastPage) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => AuthScreen()),
-                  );
-                } else {
-                  viewModel.nextPage();
-                }
-              },
-              child: Text(
-                state.isLastPage ? "Get Started" : "Continue",
-                style: AppTextStyles.buttonLarge,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

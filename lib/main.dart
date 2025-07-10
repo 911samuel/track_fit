@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:track_fit/ui/splash/initial_screen.dart';
 import 'core/theme/app_theme.dart';
-import 'ui/onboarding/view/onboarding_screen.dart';
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
 void main() {
@@ -15,7 +15,7 @@ class FitTrackApp extends StatelessWidget {
     return MaterialApp(
       title: 'Fitness Tracker',
       theme: AppTheme.darkTheme,
-      home: const OnboardingScreen(),
+      home: const InitialScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

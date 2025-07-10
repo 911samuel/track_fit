@@ -46,6 +46,7 @@ class AuthForm extends StatelessWidget {
             onTogglePassword: vm.togglePasswordVisibility,
             validator: (v) => v!.length < 6 ? 'Min 6 characters' : null,
           ),
+          const SizedBox(height: AppDimensions.spaceL),
           if (!vm.isLoginMode)
             _buildTextField(
               controller: vm.confirmPasswordController,
@@ -61,6 +62,7 @@ class AuthForm extends StatelessWidget {
                           ? 'Passwords do not match'
                           : null,
             ),
+          const SizedBox(height: AppDimensions.spaceL),
         ],
       ),
     );
@@ -81,7 +83,7 @@ class AuthForm extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: AppTextStyles.onboardingFeature),
-        const SizedBox(height: AppDimensions.spaceS),
+        const SizedBox(height: AppDimensions.spaceL),
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
