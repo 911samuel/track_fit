@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:track_fit/ui/dashboard/view_model/workout.dart';
+import 'package:track_fit/ui/dashboard/view_model/dashboard.dart';
 
 final workoutTimerProvider =
     StateNotifierProvider<WorkoutTimerNotifier, WorkoutTimerState>(

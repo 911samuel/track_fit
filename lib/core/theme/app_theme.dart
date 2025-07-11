@@ -117,7 +117,7 @@ class AppTheme {
       ),
 
       // Card Theme
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: AppColors.cardGray,
         elevation: 8,
         shadowColor: AppColors.cardShadow,
@@ -167,7 +167,7 @@ class AppTheme {
       ),
 
       // Dialog Theme
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: AppColors.cardGray,
         titleTextStyle: AppTextStyles.h3,
         contentTextStyle: AppTextStyles.bodyMedium,
@@ -188,7 +188,10 @@ class AppTheme {
   static MaterialColor _createMaterialColor(Color color) {
     List strengths = <double>[.05];
     Map<int, Color> swatch = {};
-    final int r = color.red, g = color.green, b = color.blue;
+    final int r = (color.r * 255.0).round() & 0xff;
+    final int g = (color.g * 255.0).round() & 0xff;
+    final int b = (color.b * 255.0).round() & 0xff;
+
 
     for (int i = 1; i < 10; i++) {
       strengths.add(0.1 * i);
